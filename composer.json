@@ -1,0 +1,12 @@
+{
+    "require": {
+        "react/http": "^0.8.4",
+        "ratchet/pawl": "^0.3.4",
+        "clue/buzz-react": "^2.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "APPNAME\\": "src/"
+        }
+    }
+}

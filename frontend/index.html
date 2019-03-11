@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>WebGL Globe</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        html {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="container"></div>
+
+
+<script type="text/javascript" src="globe/third-party/Detector.js"></script>
+<script type="text/javascript" src="globe/third-party/three.min.js"></script>
+<script type="text/javascript" src="globe/globe.js"></script>
+<script type="text/javascript">
+
+    var globe = DAT.Globe(document.getElementById('container'), {
+        'imgDir': 'globe/',
+    });
+
+   // globe.addData(data, {format: 'legend'});
+ //   globe.createPoints();
+  //  globe.animate();
+
+    globe.animate();
+
+
+    var es = new EventSource("/backend");
+    es.addEventListener("error", function (event) {
+        console.log('sopped EventSource', event);
+    });
+    es.addEventListener("open", function (event) {
+        console.log('start EventSource', event);
+    });
+    es.addEventListener("message", function (event) {
+        console.log('default',event);
+    });
+    es.addEventListener("certificate", function (event) {
+        var data = JSON.parse(event.data);
+        var name = data.data.leaf_cert.all_domains.join(' ');
+
+        console.log(generateRandomLat());
+
+        globe.addData( [data.location.latitude, data.location.longitude, 0.2], {format: 'magnitude', name: data.location.ip} );
+        globe.createPoints();
+    });
+
+    // LONGITUDE -180 to + 180
+    function generateRandomLong() {
+        var num = (Math.random()*180).toFixed(3);
+        var posorneg = Math.floor(Math.random());
+        if (posorneg == 0) {
+            num = num * -1;
+        }
+        return num;
+    }
+    // LATITUDE -90 to +90
+    function generateRandomLat() {
+        var num = (Math.random()*90).toFixed(3);
+        var posorneg = Math.floor(Math.random());
+        if (posorneg == 0) {
+            num = num * -1;
+        }
+        return num;
+    }
+
+</script>
+
+
+</body>
+
+</html>
